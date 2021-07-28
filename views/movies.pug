@@ -1,0 +1,86 @@
+html
+    head
+        title Movies
+        link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css')
+        script(sec = 'https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js')
+        script(sec = 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js')
+        script(sec = 'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js')
+        script(src = 'https://use.fontawesome.com/releases/v5.0.8/js/all.js')
+
+nav.navbar.navbar-inverse.navbar-dark.bg-dark.sticky-top
+  .container-fluid
+    .navbar-header
+      a.navbar-brand(href="/index/") HOME
+      a.navbar-brand(href="/userList/") PROFILE
+      a.navbar-brand(href="/movieList") MOVIE
+      a.navbar-brand(href="/peopleList/") PERSON
+      a.navbar-brand(href="/create/") CREATE USER
+      a.navbar-brand(href="/login/") LOGIN
+      a.navbar-brand(href="/search/") SEARCH
+      a.navbar-brand(href="/contribute/") CONTRIBUTE
+      a.navbar-brand(href="/current/") CURRENT USER
+      a.navbar-brand.dropdown-toggle(href='#' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false') Notifications
+      ul(class="dropdown-menu")
+        li
+          a(href='/allNotifications') View past notifications
+        notifications.forEach(function(notification))
+      a.navbar-brand
+        form(class= "form-inline my-2 my-lg-0" action='/logout?_method=DELETE' method='POST')
+          button(class= "btn btn-outline-success my-2 my-sm-0") Log Out
+
+
+body
+    div(class="row h-0 justify-content-center align-items-center")
+        h2 #{moviesArray.Title}
+    div
+        h5 Release: #{moviesArray.Released}
+        h5 Average Rating: #{moviesArray.AvgRate}
+        h5 Runtime: #{moviesArray.Runtime}
+        h5 Plot:
+
+        p #{moviesArray.Plot}
+
+        h4 Director:
+        each m in moviesArray.Director
+           a(href="/people/" + m._id) #{m.name}
+           br
+        h4 Writer:
+        each w in moviesArray.Writer
+           a(href="/people/" + w._id) #{w.name}
+           br
+        h4 Stars:
+        each x in moviesArray.Actor
+           a(href="/people/" + x._id) #{x.name}
+           br
+        h4 Similar Movies:
+        each z in moviesArray.Similar
+           a(href="/movies/" + z._id) #{z.Title}
+           br
+        h4 Genre: 
+        each g in moviesArray.Genre
+          a(href="/genreList?search=" + g) #{g}
+          br
+        h2 Reviews:
+        each k in moviesArray.Reviews
+          li= k
+        br
+    form(action='/addAnReview/' + moviesArray._id method = 'POST')
+      div
+        h2 Enter Reviews:
+        h4 Please give a score of 10, summary of movie and a review
+          br
+          input(name = "reviews" type = "text" id = "reviews")
+        button(type="submit" onclick='#{submitReview()}') Add Review
+        br
+    form(action='/addRating/' + moviesArray._id method = 'POST')
+      div
+        h2 Enter Rating from 1 to 10:
+          input(name = "score" type = "text" id = "score")
+        button(type="submit" onclick='#{submitRating()}') Add Rating
+        br
+        |
+        a(class='button' href='/addMovie/' + moviesArray.id ) Watched Movie
+    br
+    br
+    br
+    img(src= moviesArray.Poster, alt='poster', style='width:1000px;height:1000px;')
